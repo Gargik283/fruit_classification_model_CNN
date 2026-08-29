@@ -1,44 +1,48 @@
 # 🍎 Fresh vs Rotten Fruit Image Classifier
 
-A deep learning-based image classification project that predicts whether a fruit image is **Fresh** or **Rotten**.
+A **Deep Learning image classification project** using a **Convolutional Neural Network (CNN)** to classify fruit images as **Fresh** or **Rotten**.
 
 ## 📌 Project Overview
 
-This project uses a **Convolutional Neural Network (CNN)** built with **TensorFlow/Keras** to classify fruit images into two categories:
+This project uses **TensorFlow/Keras** to build and train a CNN-based binary image classifier.
 
-* 🟢 Fresh
-* 🔴 Rotten
+The model processes fruit images and predicts:
 
-The trained model takes a fruit image as input, preprocesses it to **224 × 224 pixels**, and predicts the class using binary classification.
+* 🟢 **Fresh**
+* 🔴 **Rotten**
+
+The input images are resized to **224 × 224 pixels** and normalized to a **0–1** pixel range before prediction.
 
 ## 🧠 Technologies Used
 
 * Python
 * TensorFlow / Keras
-* CNN
+* Convolutional Neural Network (CNN)
 * NumPy
 * Pillow
 * Streamlit
-* Matplotlib
 * Scikit-learn
+* Matplotlib
 
 ## ⚙️ Model Details
 
-* **Task:** Binary Image Classification
-* **Input Size:** 224 × 224
-* **Output:** Fresh / Rotten
-* **Activation:** Sigmoid
-* **Image Scaling:** Pixel values normalized to 0–1
-* **Test Accuracy:** 95.40%
+| Parameter     | Details                            |
+| ------------- | ---------------------------------- |
+| Model         | Convolutional Neural Network (CNN) |
+| Task          | Binary Image Classification        |
+| Input Size    | 224 × 224                          |
+| Output        | Fresh / Rotten                     |
+| Activation    | Sigmoid                            |
+| Test Accuracy | **95.40%**                         |
 
-## 🚀 Streamlit App
+## 🚀 Streamlit Application
 
-The project includes an interactive Streamlit application where users can:
+The project includes an interactive **Streamlit web application** that allows users to:
 
 1. Upload a fruit image
-2. Preview the uploaded image
-3. Click **Predict**
-4. View the predicted class
+2. Preview the image
+3. Run the CNN model
+4. Get a Fresh/Rotten prediction
 5. View the prediction confidence
 
 ## 📂 Project Structure
@@ -52,36 +56,38 @@ Fresh-Rotten-Classifier/
 └── .gitignore
 ```
 
-> The trained `.keras` model is not stored directly in this GitHub repository because of GitHub file-size limitations. The model can be hosted separately and loaded by the Streamlit application.
+> The trained `.keras` model is not included directly in the GitHub repository because of GitHub file-size limitations. The model can be hosted separately and loaded by the Streamlit application.
 
 ## 💻 Run Locally
 
-Clone the repository:
+### 1. Clone the repository
 
 ```bash
 git clone YOUR_GITHUB_REPOSITORY_LINK
 cd Fresh-Rotten-Classifier
 ```
 
-Create and activate a virtual environment:
+### 2. Create a virtual environment
 
 ```bash
 py -3.11 -m venv venv
 ```
 
-Windows PowerShell:
+### 3. Activate the environment
+
+**Windows PowerShell:**
 
 ```bash
 .\venv\Scripts\Activate.ps1
 ```
 
-Install dependencies:
+### 4. Install dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-Run the application:
+### 5. Run the Streamlit app
 
 ```bash
 streamlit run app.py
@@ -89,17 +95,19 @@ streamlit run app.py
 
 ## 📊 Results
 
-The CNN model achieved approximately **95.40% accuracy on the test dataset**, demonstrating strong performance in distinguishing fresh and rotten fruit images.
+The trained CNN achieved **95.40% test accuracy** on the fruit classification task.
 
-## 🎯 Skills Demonstrated
+## 🎯 Key Skills Demonstrated
 
-* Image preprocessing
-* CNN model development
-* Binary classification
-* TensorFlow/Keras model training
-* Model evaluation
-* Streamlit application development
-* Machine learning deployment
+* Deep Learning
+* CNN Architecture
+* Image Classification
+* Image Preprocessing
+* TensorFlow/Keras
+* Model Evaluation
+* Python
+* Streamlit
+* Model Deployment
 
 ## 👩‍💻 Author
 
@@ -107,7 +115,7 @@ The CNN model achieved approximately **95.40% accuracy on the test dataset**, de
 
 B.Tech – Electronics & Communication Engineering (VLSI Design)
 
-### 🔗 Links
+## 🔗 Links
 
-* GitHub: YOUR_GITHUB_PROFILE_LINK
-* Live Demo: YOUR_STREAMLIT_APP_LINK
+* **GitHub:** YOUR_GITHUB_PROFILE_LINK
+* **Live Demo:** YOUR_STREAMLIT_APP_LINK
