@@ -117,5 +117,5 @@ B.Tech – Electronics & Communication Engineering (VLSI Design)
 
 ## 🔗 Links
 
-* **GitHub:** YOUR_GITHUB_PROFILE_LINK
-* **Live Demo:** YOUR_STREAMLIT_APP_LINK
+* **GitHub:** https://github.com/Gargik283/fruit_classification_model_CNN
+* **Live Demo:** https://fruitclassificationmodelcnn-l4pvfvrtjmcndvfs8fbvpa.streamlit.app/
