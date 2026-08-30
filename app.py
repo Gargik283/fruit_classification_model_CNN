@@ -369,4 +369,3 @@ with st.sidebar:
     st.write(
         "**Test Accuracy:** 95.40%"
     )
-```
