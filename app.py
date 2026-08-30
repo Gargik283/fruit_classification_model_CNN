@@ -1,149 +1,61 @@
+```python
 import streamlit as st
 import numpy as np
 import tensorflow as tf
 from PIL import Image
-from pathlib import Path
-import requests
+from huggingface_hub import hf_hub_download
 
 # --------------------------------------------------
 # Page Configuration
 # --------------------------------------------------
 
 st.set_page_config(
-    page_title="Fresh vs Rotten Classifier",
+    page_title="Fresh vs Rotten",
     page_icon="🍎",
     layout="centered"
 )
 
 # --------------------------------------------------
-# Custom Styling
+# Title
 # --------------------------------------------------
 
-st.markdown(
-    """
-    <style>
-        .main-title {
-            text-align: center;
-            font-size: 36px;
-            font-weight: 700;
-            margin-bottom: 5px;
-        }
+st.title("🍎 Fresh vs Rotten Image Classifier")
 
-        .subtitle {
-            text-align: center;
-            color: #666;
-            font-size: 16px;
-            margin-bottom: 30px;
-        }
-
-        .result-box {
-            padding: 20px;
-            border-radius: 12px;
-            text-align: center;
-            margin-top: 20px;
-            border: 1px solid #ddd;
-        }
-
-        .confidence {
-            font-size: 18px;
-            font-weight: 600;
-        }
-    </style>
-    """,
-    unsafe_allow_html=True
+st.write(
+    "Upload a fruit image and the CNN model will predict "
+    "whether it is **Fresh** or **Rotten**."
 )
 
 # --------------------------------------------------
-# Header
+# Hugging Face Model Information
 # --------------------------------------------------
 
-st.markdown(
-    '<div class="main-title">🍎 Fresh vs Rotten Image Classifier</div>',
-    unsafe_allow_html=True
-)
-
-st.markdown(
-    '<div class="subtitle">'
-    'Upload a fruit image and let the CNN model classify it as Fresh or Rotten.'
-    '</div>',
-    unsafe_allow_html=True
-)
-
-# --------------------------------------------------
-# Model Configuration
-# --------------------------------------------------
-
+REPO_ID = "Gargikundu22/fruit_classification_model"
 MODEL_FILENAME = "fruit_classification_model.keras"
 
-# IMPORTANT:
-# Replace this with the direct Hugging Face download URL
-# of your fruit_classification_model.keras file.
-MODEL_URL = "https://huggingface.co/Gargikundu22/fruit_classification_model/tree/main"
-
-
 # --------------------------------------------------
-# Download Model
-# --------------------------------------------------
-
-def download_model():
-
-    model_path = Path(MODEL_FILENAME)
-
-    # If model already exists, don't download it again
-    if model_path.exists():
-        return model_path
-
-    if MODEL_URL == "https://huggingface.co/Gargikundu22/fruit_classification_model/tree/main":
-        st.error("Model URL has not been configured.")
-        st.info(
-            "Upload your .keras model to Hugging Face and replace "
-            "MODEL_URL in app.py with its direct download URL."
-        )
-        st.stop()
-
-    try:
-
-        with st.spinner("Downloading trained CNN model..."):
-
-            response = requests.get(
-                MODEL_URL,
-                stream=True,
-                timeout=120
-            )
-
-            response.raise_for_status()
-
-            with open(model_path, "wb") as file:
-
-                for chunk in response.iter_content(
-                    chunk_size=1024 * 1024
-                ):
-
-                    if chunk:
-                        file.write(chunk)
-
-        return model_path
-
-    except Exception as e:
-
-        st.error("Unable to download the trained model.")
-        st.exception(e)
-        st.stop()
-
-
-# --------------------------------------------------
-# Load Model
+# Download and Load Model
 # --------------------------------------------------
 
 @st.cache_resource
 def load_model():
 
-    model_path = download_model()
+    model_path = hf_hub_download(
+        repo_id=REPO_ID,
+        filename=MODEL_FILENAME,
+        revision="main"
+    )
 
-    return tf.keras.models.load_model(
+    model = tf.keras.models.load_model(
         model_path
     )
 
+    return model
+
+
+# --------------------------------------------------
+# Load Model
+# --------------------------------------------------
 
 try:
 
@@ -151,7 +63,14 @@ try:
 
 except Exception as e:
 
-    st.error("Unable to load the trained CNN model.")
+    st.error("❌ Unable to load the CNN model.")
+
+    st.write(
+        "Please make sure the following file exists "
+        "inside your Hugging Face repository:"
+    )
+
+    st.code(MODEL_FILENAME)
 
     st.exception(e)
 
@@ -164,7 +83,7 @@ except Exception as e:
 
 def preprocess_image(image):
 
-    # Resize image to the same size used during training
+    # Resize to the same size used during training
     image = image.resize((224, 224))
 
     # Convert image to NumPy array
@@ -173,7 +92,7 @@ def preprocess_image(image):
         dtype=np.float32
     )
 
-    # Normalize pixel values from 0-255 to 0-1
+    # Normalize pixel values
     image = image / 255.0
 
     # Add batch dimension
@@ -190,7 +109,7 @@ def preprocess_image(image):
 # --------------------------------------------------
 
 uploaded_file = st.file_uploader(
-    "📤 Upload a fruit image",
+    "📤 Choose a fruit image",
     type=[
         "jpg",
         "jpeg",
@@ -205,10 +124,12 @@ uploaded_file = st.file_uploader(
 
 if uploaded_file is not None:
 
+    # Open uploaded image
     image = Image.open(
         uploaded_file
     ).convert("RGB")
 
+    # Display image
     st.image(
         image,
         caption="Uploaded Image",
@@ -217,6 +138,7 @@ if uploaded_file is not None:
 
     st.write("")
 
+    # Prediction button
     if st.button(
         "🔍 Predict",
         use_container_width=True
@@ -226,10 +148,12 @@ if uploaded_file is not None:
             "Analyzing image..."
         ):
 
+            # Preprocess image
             processed_image = preprocess_image(
                 image
             )
 
+            # Make prediction
             prediction = model.predict(
                 processed_image,
                 verbose=0
@@ -239,10 +163,10 @@ if uploaded_file is not None:
             #
             # 0 = Fresh
             # 1 = Rotten
-
             rotten_probability = float(
                 prediction[0][0]
             )
+
 
         # --------------------------------------------------
         # Classification
@@ -262,44 +186,55 @@ if uploaded_file is not None:
 
 
         # --------------------------------------------------
-        # Display Result
+        # Display Prediction
         # --------------------------------------------------
 
-        st.markdown(
-            f"""
-            <div class="result-box">
+        st.subheader(
+            f"Prediction: {label}"
+        )
 
-                <h2>{label}</h2>
-
-                <p class="confidence">
-                    Confidence: {confidence * 100:.2f}%
-                </p>
-
-            </div>
-            """,
-            unsafe_allow_html=True
+        st.write(
+            f"Confidence Score: "
+            f"**{confidence * 100:.2f}%**"
         )
 
 
         # --------------------------------------------------
-        # Model Output
+        # Confidence Progress Bar
+        # --------------------------------------------------
+
+        st.progress(
+            confidence
+        )
+
+
+        # --------------------------------------------------
+        # Model Information
         # --------------------------------------------------
 
         with st.expander(
-            "View Model Output"
+            "🔎 View Model Details"
         ):
 
             st.write(
-                f"Raw sigmoid score: "
+                f"Raw sigmoid output: "
                 f"`{rotten_probability:.4f}`"
             )
 
             st.write(
-                "Input Image Size: `224 × 224`"
+                "Input image size: `224 × 224`"
             )
 
             st.write(
-                "Pixel Normalization: `0–1`"
+                "Pixel normalization: `0–1`"
+            )
+
+            st.write(
+                "Model type: `Convolutional Neural Network (CNN)`"
+            )
+
+            st.write(
+                "Task: `Binary Image Classification`"
             )
 
 
@@ -315,9 +250,9 @@ with st.sidebar:
 
     st.write(
         """
-        This project uses a Convolutional Neural
-        Network (CNN) built with TensorFlow/Keras
-        to classify fruit images as Fresh or Rotten.
+        This project uses a Convolutional Neural Network
+        (CNN) built with TensorFlow/Keras to classify
+        fruit images as Fresh or Rotten.
         """
     )
 
@@ -329,14 +264,21 @@ with st.sidebar:
 
     st.write(
         """
-        - Deep Learning
-        - Convolutional Neural Networks (CNN)
-        - Image Classification
-        - Image Preprocessing
-        - TensorFlow / Keras
-        - NumPy
-        - Model Evaluation
-        - Streamlit Deployment
+        • Deep Learning
+
+        • Convolutional Neural Networks (CNN)
+
+        • Image Classification
+
+        • Image Preprocessing
+
+        • TensorFlow / Keras
+
+        • NumPy
+
+        • Model Evaluation
+
+        • Streamlit Deployment
         """
     )
 
@@ -369,3 +311,4 @@ with st.sidebar:
     st.write(
         "**Test Accuracy:** 95.40%"
     )
+```
