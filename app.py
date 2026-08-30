@@ -78,7 +78,7 @@ MODEL_FILENAME = "fruit_classification_model.keras"
 # IMPORTANT:
 # Replace this with the direct Hugging Face download URL
 # of your fruit_classification_model.keras file.
-MODEL_URL = "YOUR_HUGGINGFACE_MODEL_URL"
+MODEL_URL = "https://huggingface.co/Gargikundu22/fruit_classification_model/tree/main"
 
 
 # --------------------------------------------------
@@ -93,7 +93,7 @@ def download_model():
     if model_path.exists():
         return model_path
 
-    if MODEL_URL == "YOUR_HUGGINGFACE_MODEL_URL":
+    if MODEL_URL == "https://huggingface.co/Gargikundu22/fruit_classification_model/tree/main":
         st.error("Model URL has not been configured.")
         st.info(
             "Upload your .keras model to Hugging Face and replace "
