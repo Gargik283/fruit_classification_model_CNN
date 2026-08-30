@@ -30,7 +30,7 @@ st.write(
 # --------------------------------------------------
 
 REPO_ID = "Gargikundu22/fruit_classification_model"
-MODEL_FILENAME = "fruit_classification_model.keras"
+MODEL_FILENAME = "fruits_classification_model.keras"
 
 # --------------------------------------------------
 # Download and Load Model
