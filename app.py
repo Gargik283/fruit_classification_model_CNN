@@ -1,4 +1,3 @@
-```python
 import streamlit as st
 import numpy as np
 import tensorflow as tf
@@ -311,4 +310,3 @@ with st.sidebar:
     st.write(
         "**Test Accuracy:** 95.40%"
     )
-```
